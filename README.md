@@ -12,8 +12,8 @@ This repository contains **Dockerfile** of [PostgreSQL](http://www.postgresql.or
 
 #### Run PostgreSQL server
 
-    docker run -d --name postgresql -p 5432:5432 -e POSTGRESQL_USER=test -e POSTGRESQL_PASS=oe9jaacZLbR9pN -e POSTGRESQL_DB=test imanel/postgresql
+    docker run -d --name postgresql -p 5432:5432 -e POSTGRESQL_PASS=oe9jaacZLbR9pN imanel/postgresql
 
 #### Run PostgreSQL client
 
-    docker run -i --rm -t --entrypoint="bash" --link postgresql:postgresql imanel/postgresql -c 'psql -h $POSTGRESQL_PORT_5432_TCP_ADDR'
+    docker run -i --rm -t --entrypoint="bash" --link postgresql:postgresql imanel/postgresql -c 'psql -h $POSTGRESQL_PORT_5432_TCP_ADDR --user postgres'

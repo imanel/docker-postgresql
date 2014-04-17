@@ -1,27 +1,24 @@
 #!/bin/bash
 set -e
 
-POSTGRESQL_USER=${POSTGRESQL_USER:-"docker"}
-POSTGRESQL_PASS=${POSTGRESQL_PASS:-"docker"}
-POSTGRESQL_DB=${POSTGRESQL_DB:-"docker"}
-POSTGRESQL_TEMPLATE=${POSTGRESQL_TEMPLATE:-"DEFAULT"}
+POSTGRESQL_VERSION=9.1
 
-POSTGRESQL_BIN=/usr/lib/postgresql/9.1/bin/postgres
-POSTGRESQL_CONFIG_FILE=/etc/postgresql/9.1/main/postgresql.conf
-POSTGRESQL_DATA=/var/lib/postgresql/9.1/main
-
-POSTGRESQL_SINGLE="sudo -u postgres $POSTGRESQL_BIN --single --config-file=$POSTGRESQL_CONFIG_FILE"
+POSTGRESQL_BIN=/usr/lib/postgresql/$POSTGRESQL_VERSION/bin
+POSTGRESQL_CONFIG_FILE=/etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
+POSTGRESQL_DATA=/var/lib/postgresql/$POSTGRESQL_VERSION/main
 
 if [ ! -d $POSTGRESQL_DATA ]; then
     mkdir -p $POSTGRESQL_DATA
     chown -R postgres:postgres $POSTGRESQL_DATA
-    sudo -u postgres /usr/lib/postgresql/9.1/bin/initdb -D $POSTGRESQL_DATA
-    ln -s /etc/ssl/certs/ssl-cert-snakeoil.pem $POSTGRESQL_DATA/server.crt
-    ln -s /etc/ssl/private/ssl-cert-snakeoil.key $POSTGRESQL_DATA/server.key
+    sudo -u postgres $POSTGRESQL_BIN/initdb -D $POSTGRESQL_DATA
 fi
 
-$POSTGRESQL_SINGLE <<< "CREATE USER $POSTGRESQL_USER WITH SUPERUSER;" > /dev/null
-$POSTGRESQL_SINGLE <<< "ALTER USER $POSTGRESQL_USER WITH PASSWORD '$POSTGRESQL_PASS';" > /dev/null
-$POSTGRESQL_SINGLE <<< "CREATE DATABASE $POSTGRESQL_DB OWNER $POSTGRESQL_USER TEMPLATE $POSTGRESQL_TEMPLATE;" > /dev/null
+if [ ! -f $POSTGRESQL_DATA/server.crt ]; then
+  cp /etc/ssl/certs/ssl-cert-snakeoil.pem $POSTGRESQL_DATA/server.crt
+  cp /etc/ssl/private/ssl-cert-snakeoil.key $POSTGRESQL_DATA/server.key
+  chown postgres:postgres $POSTGRESQL_DATA/server.*
+fi
 
-exec sudo -u postgres $POSTGRESQL_BIN --config-file=$POSTGRESQL_CONFIG_FILE
+sudo -u postgres $POSTGRESQL_BIN/postgres --single --config-file=$POSTGRESQL_CONFIG_FILE <<< "ALTER USER postgres WITH PASSWORD '$POSTGRESQL_PASS';" > /dev/null
+
+exec sudo -u postgres $POSTGRESQL_BIN/postgres --config-file=$POSTGRESQL_CONFIG_FILE
