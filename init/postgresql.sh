@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-chown postgres:postgres /data/postgresql
-
 POSTGRESQL_VERSION=9.3
 
 POSTGRESQL_BIN=/usr/lib/postgresql/$POSTGRESQL_VERSION/bin
