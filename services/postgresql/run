@@ -1,16 +1,18 @@
 #!/bin/bash
 set -e
 
+chown postgres:postgres /data/postgresql
+
 POSTGRESQL_VERSION=9.1
 
 POSTGRESQL_BIN=/usr/lib/postgresql/$POSTGRESQL_VERSION/bin
 POSTGRESQL_CONFIG_FILE=/etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
-POSTGRESQL_DATA=/var/lib/postgresql/$POSTGRESQL_VERSION/main
+POSTGRESQL_DATA=/data/postgresql/$POSTGRESQL_VERSION/main
 
 if [ ! -d $POSTGRESQL_DATA ]; then
     mkdir -p $POSTGRESQL_DATA
     chown -R postgres:postgres $POSTGRESQL_DATA
-    sudo -u postgres $POSTGRESQL_BIN/initdb -D $POSTGRESQL_DATA
+    /sbin/setuser postgres $POSTGRESQL_BIN/initdb -D $POSTGRESQL_DATA
 fi
 
 if [ ! -f $POSTGRESQL_DATA/server.crt ]; then
@@ -19,6 +21,6 @@ if [ ! -f $POSTGRESQL_DATA/server.crt ]; then
   chown postgres:postgres $POSTGRESQL_DATA/server.*
 fi
 
-sudo -u postgres $POSTGRESQL_BIN/postgres --single --config-file=$POSTGRESQL_CONFIG_FILE <<< "ALTER USER postgres WITH PASSWORD '$POSTGRESQL_PASS';" > /dev/null
+/sbin/setuser postgres $POSTGRESQL_BIN/postgres --single --config-file=$POSTGRESQL_CONFIG_FILE <<< "ALTER USER postgres WITH PASSWORD '$POSTGRESQL_PASS';" > /dev/null
 
-exec sudo -u postgres $POSTGRESQL_BIN/postgres --config-file=$POSTGRESQL_CONFIG_FILE
+exec /sbin/setuser postgres $POSTGRESQL_BIN/postgres --config-file=$POSTGRESQL_CONFIG_FILE
