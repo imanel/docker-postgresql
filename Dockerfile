@@ -16,6 +16,7 @@ RUN sed -i "s/^data_directory = .*/data_directory = '\/data\/postgresql\/9.3\/ma
     echo "host    all    all    0.0.0.0/0    md5" >> /etc/postgresql/9.3/main/pg_hba.conf
 
 # Add run script
+ADD init/postgresql.sh /etc/my_init.d/postgresql.sh
 ADD services/postgresql /etc/service/postgresql
 
 # Expose ports
@@ -25,4 +26,4 @@ EXPOSE 5432
 VOLUME ["/data/postgresql"]
 
 # Define an entry point
-ENTRYPOINT ["/sbin/my_init"]
+CMD ["/sbin/my_init"]
