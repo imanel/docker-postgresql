@@ -2,12 +2,10 @@ FROM imanel/base
 MAINTAINER Bernard Potocki <bernard.potocki@imanel.org>
 
 # Add PPA and install PostgreSQL
-RUN apt-add-repository -y 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' && \
-    apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes \
       postgresql-9.3 \
       postgresql-contrib-9.3 \
-      postgresql-9.3-postgis
+      postgresql-9.3-postgis-2.1
 
 # Configure PostgreSQL
 RUN sed -i "s/^data_directory = .*/data_directory = '\/data\/postgresql\/9.3\/main'/" /etc/postgresql/9.3/main/postgresql.conf && \
