@@ -2,7 +2,7 @@ FROM imanel/base
 MAINTAINER Bernard Potocki <bernard.potocki@imanel.org>
 
 # Add PPA and install PostgreSQL
-RUN apt-add-repository -y 'deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main' && \
+RUN apt-add-repository -y 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' && \
     apt-get update -qq && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes \
       postgresql-9.3 \
