@@ -1,8 +1,9 @@
 FROM imanel/base
 MAINTAINER Bernard Potocki <bernard.potocki@imanel.org>
 
-# Add PPA and install PostgreSQL
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes \
+# Install PostgreSQL
+RUN apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
       postgresql-9.3 \
       postgresql-contrib-9.3 \
       postgresql-9.3-postgis-2.1
