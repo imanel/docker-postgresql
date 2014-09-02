@@ -1,8 +1,0 @@
-#!/bin/bash
-
-POSTGRESQL_VERSION=9.3
-
-POSTGRESQL_BIN=/usr/lib/postgresql/$POSTGRESQL_VERSION/bin
-POSTGRESQL_CONFIG_FILE=/etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
-
-exec /sbin/setuser postgres $POSTGRESQL_BIN/postgres --config-file=$POSTGRESQL_CONFIG_FILE

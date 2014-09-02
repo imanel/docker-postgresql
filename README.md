@@ -10,10 +10,10 @@ This repository contains **Dockerfile** of [PostgreSQL](http://www.postgresql.or
 
 ### Usage
 
+#### Create database
+
+    docker run -i -v $(pwd):/data/postgresql imanel/postgresql ./initdb -D /data/postgresql/$PG_VERSION/main -U superuser --pwfile=/data/postgresql/password.file
+
 #### Run PostgreSQL server
 
-    docker run -d --name postgresql -p 5432:5432 -e POSTGRESQL_PASS=oe9jaacZLbR9pN imanel/postgresql
-
-#### Run PostgreSQL client
-
-    docker run -i --rm -t --entrypoint="bash" --link postgresql:postgresql imanel/postgresql -c 'psql -h $POSTGRESQL_PORT_5432_TCP_ADDR --user postgres'
+    docker run -d -v $(pwd):/data/postgresql --name postgresql -p 5432:5432 imanel/postgresql
